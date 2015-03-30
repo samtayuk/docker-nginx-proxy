@@ -112,10 +112,10 @@ server {
 	{{ range $location, $containers := groupBy $containers "Env.VIRTUAL_LOCATION" }}
 	{{ if eq $location "/" }}
 	location / {
-		proxy_pass http://{{ $host }}_;
+		proxy_pass http://{{ $host }}_/;
 	{{ else }}
 	location /{{ $location }} {
-		proxy_pass http://{{ $host }}_{{ $location }};
+		proxy_pass http://{{ $host }}_{{ $location }}/{{ $location }};
 	{{ end }}
 		{{ if (exists (printf "/etc/nginx/htpasswd/%s" $host)) }}
 		auth_basic	"Restricted {{ $host }}";
@@ -132,10 +132,10 @@ server {
 	{{ range $location, $containers := groupBy $containers "Env.VIRTUAL_LOCATION" }}
 	{{ if eq $location "/" }}
 	location / {
-		proxy_pass http://{{ $host }}_;
+		proxy_pass http://{{ $host }}_/;
 	{{ else }}
 	location /{{ $location }} {
-		proxy_pass http://{{ $host }}_{{ $location }};
+		proxy_pass http://{{ $host }}_{{ $location }}/{{ $location }};
 	{{ end }}
 		{{ if (exists (printf "/etc/nginx/htpasswd/%s" $host)) }}
 		auth_basic	"Restricted {{ $host }}";
