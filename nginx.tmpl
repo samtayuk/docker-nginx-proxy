@@ -109,8 +109,6 @@ server {
 	ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $cert) }};
 	ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $cert) }};
 
-	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
-
 	{{ range $location, $containers := groupBy $containers "Env.VIRTUAL_LOCATION" }}
 	{{ if eq $location "/" }}
 	location / {
