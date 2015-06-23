@@ -1,4 +1,4 @@
-FROM nginx:1.7.10
+FROM nginx:1.9.2
 MAINTAINER Samuel Taylor "samtaylor.uk@gmail.com"
 
 # To get rid of error messages like "debconf: unable to initialize frontend: Dialog":
