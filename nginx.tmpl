@@ -114,9 +114,19 @@ server {
 	{{ $proxyBase := (first (groupByKeys $containers "Env.VIRTUAL_PROXY_BASE")) }}
 	{{ if eq $location "/" }}
 	location / {
+		# Caching
+		proxy_cache cache;
+    	proxy_cache_bypass  $http_cache_control;
+    	add_header X-Proxy-Cache $upstream_cache_status;
+		
 		proxy_pass http://{{ $host }}_/;
 	{{ else }}
 	location /{{ $location }} {
+		# Caching
+		proxy_cache cache;
+    	proxy_cache_bypass  $http_cache_control;
+    	add_header X-Proxy-Cache $upstream_cache_status;
+
 		{{ if $proxyBase }}
 		proxy_pass http://{{ $host }}_{{ $location }}/;
 		{{ else }}
@@ -142,9 +152,19 @@ server {
 
 	{{ if eq $location "/" }}
 	location / {
+		# Caching
+		proxy_cache cache;
+    	proxy_cache_bypass  $http_cache_control;
+    	add_header X-Proxy-Cache $upstream_cache_status;
+
 		proxy_pass http://{{ $host }}_/;
 	{{ else }}
 	location /{{ $location }} {
+		# Caching
+		proxy_cache cache;
+    	proxy_cache_bypass  $http_cache_control;
+    	add_header X-Proxy-Cache $upstream_cache_status;
+    	
 		{{ if $proxyBase }}
 		proxy_pass http://{{ $host }}_{{ $location }}/;
 		{{ else }}
