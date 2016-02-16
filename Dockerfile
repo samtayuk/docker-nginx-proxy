@@ -13,9 +13,8 @@ RUN apt-get update \
   && rm -r /var/lib/apt/lists/*
 
 # Configure Nginx and apply fix for long server names
-COPY nginx.conf /etc/nginx/
-COPY mime.types /etc/nginx/
-
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf \
+  && sed -i 's/^http {/&\n    server_names_hash_bucket_size 64;/g' /etc/nginx/nginx.conf
 
 # Install Forego
 RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego \

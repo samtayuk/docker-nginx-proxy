@@ -12,6 +12,10 @@ map $http_upgrade $proxy_connection {
   ''      '';
 }
 
+# Caching
+proxy_cache_path /tmp/nginx levels=1:2 keys_zone=cache:100m inactive=60m;
+proxy_cache_key "$scheme$request_method$host$request_uri";
+
 gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
 log_format vhost '$host $remote_addr - $remote_user [$time_local] '
