@@ -14,7 +14,7 @@ RUN apt-get update \
 
 # Configure Nginx and apply fix for long server names
 COPY nginx.conf /etc/nginx/
-COPY mime.type /etc/nginx/
+COPY mime.types /etc/nginx/
 
 
 # Install Forego
