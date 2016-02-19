@@ -6,8 +6,12 @@
 			server {{ .Container.Node.Address.IP }}:{{ .Address.HostPort }};
 		{{/* If there is no swarm node or the port is not published on host, use container's IP:PORT */}}
 		{{ else }}
-			# {{ .Container.Name }}
-			server {{ .Address.IP }}:{{ .Address.Port }};
+		    # {{ .Container.Name }}
+			{{ if .Address.IP }}
+				server {{ .Address.IP }}:{{ .Address.Port }};
+			{{ else }}
+			    server {{ .Container.Name }}:{{ .Address.Port }};
+			{{ end }}
 		{{ end }}
 	{{ else }}
 		# {{ .Container.Name }}
