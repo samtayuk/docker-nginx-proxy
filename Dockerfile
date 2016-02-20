@@ -1,20 +1,14 @@
 FROM nginx:1.9
 MAINTAINER Samuel Taylor "samtaylor.uk@gmail.com"
 
-# To get rid of error messages like "debconf: unable to initialize frontend: Dialog":
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-
 # Install wget and install/updates certificates
-RUN apt-get update \
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
+  && apt-get update \
   && apt-get install -y -q --no-install-recommends \
     ca-certificates \
     wget \
   && apt-get clean \
   && rm -r /var/lib/apt/lists/*
-
-# Configure Nginx and apply fix for long server names
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf \
-  && sed -i 's/^http {/&\n    server_names_hash_bucket_size 64;/g' /etc/nginx/nginx.conf
 
 # Install Forego
 RUN wget -P /usr/local/bin https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego \
@@ -26,11 +20,13 @@ RUN wget https://github.com/jwilder/docker-gen/releases/download/$DOCKER_GEN_VER
   && tar -C /usr/local/bin -xvzf docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz \
   && rm /docker-gen-linux-amd64-$DOCKER_GEN_VERSION.tar.gz
 
-COPY . /app/
+COPY Procfile virtualhosts.tmpl docker-entrypoint.sh /app/
+COPY nginx.conf /etc/nginx/nginx.conf
 WORKDIR /app/
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
 VOLUME ["/etc/nginx/certs"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 CMD ["forego", "start", "-r"]
